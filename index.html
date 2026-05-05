@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytor grafiki pikselowej</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef2ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #toolbar,
+        #info {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        #grid {
+            --grid-size: 16;
+            display: grid;
+            grid-template-columns: repeat(var(--grid-size), 24px);
+            gap: 1px;
+            background: #aaa;
+            padding: 4px;
+        }
+
+        .cell {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .cell:hover {
+            background: #dbeafe;
+        }
+
+        .info-item {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <h1>PAINT</h1>
+
+    <div id="toolbar"></div>
+    <div id="grid"></div>
+    <div id="info"></div>
+</div>
+
+<script>
+    const GRID_SIZE = 16;
+
+    const toolbar = document.getElementById('toolbar');
+    const grid = document.getElementById('grid');
+    const info = document.getElementById('info');
+
+    grid.style.setProperty('--grid-size', GRID_SIZE);
+
+    const colorLabel = document.createElement('label');
+    colorLabel.textContent = 'Kolor: ';
+
+    const colorPicker = document.createElement('input');
+    colorPicker.type = 'color';
+    colorPicker.id = 'color-picker';
+    colorPicker.value = '#000000';
+
+    colorLabel.appendChild(colorPicker);
+
+    const brushLabel = document.createElement('label');
+    brushLabel.textContent = ' Pędzel: ';
+
+    const brushSize = document.createElement('select');
+    brushSize.id = 'brush-size';
+
+    const sizes = ['1×1', '2×2', '3×3'];
+
+    for (let i = 0; i < sizes.length; i++) {
+        const option = document.createElement('option');
+        option.value = i + 1;
+        option.textContent = sizes[i];
+        brushSize.appendChild(option);
+    }
+
+    brushLabel.appendChild(brushSize);
+
+    const eraserButton = document.createElement('button');
+    eraserButton.id = 'eraser-btn';
+    eraserButton.textContent = 'Gumka';
+
+    const clearButton = document.createElement('button');
+    clearButton.id = 'clear-btn';
+    clearButton.textContent = 'Wyczyść';
+
+    toolbar.appendChild(colorLabel);
+    toolbar.appendChild(brushLabel);
+    toolbar.appendChild(eraserButton);
+    toolbar.appendChild(clearButton);
+
+    for (let row = 0; row < GRID_SIZE; row++) {
+        for (let col = 0; col < GRID_SIZE; col++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = row;
+            cell.dataset.col = col;
+            grid.appendChild(cell);
+        }
+    }
+
+    const rowInfo = document.createElement('div');
+    rowInfo.className = 'info-item';
+    rowInfo.textContent = 'Wiersz: ';
+
+    const rowSpan = document.createElement('span');
+    rowSpan.id = 'info-row';
+    rowSpan.textContent = '–';
+    rowInfo.appendChild(rowSpan);
+
+    const colInfo = document.createElement('div');
+    colInfo.className = 'info-item';
+    colInfo.textContent = 'Kolumna: ';
+
+    const colSpan = document.createElement('span');
+    colSpan.id = 'info-col';
+    colSpan.textContent = '–';
+    colInfo.appendChild(colSpan);
+
+    const countInfo = document.createElement('div');
+    countInfo.className = 'info-item';
+    countInfo.textContent = 'Aktywne komórki: ';
+
+    const countSpan = document.createElement('span');
+    countSpan.id = 'info-count';
+    countSpan.textContent = '0';
+    countInfo.appendChild(countSpan);
+
+    info.appendChild(rowInfo);
+    info.appendChild(colInfo);
+    info.appendChild(countInfo);
+</script>
+
+</body>
+</html>
